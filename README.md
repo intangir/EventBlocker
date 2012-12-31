@@ -1,0 +1,4 @@
+EventBlocker
+============
+
+Blocks certain events
