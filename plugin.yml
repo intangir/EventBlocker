@@ -1,0 +1,6 @@
+name: EventBlocker
+main: com.github.intangir.EventBlocker.EventBlocker
+version: 1.0
+description: Blocks Events
+author: Intangir
+
