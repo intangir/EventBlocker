@@ -4,17 +4,18 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.Biome;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkPopulateEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,11 +25,6 @@ public class EventBlocker extends JavaPlugin implements Listener
     public Logger log;
     public PluginDescriptionFile pdfFile;
     
-    public void info(String message)
-    {
-    	log.info("[" + pdfFile.getName() + "] " + message);
-    }
-    
 	public void onEnable()
 	{
 		log = this.getLogger();
@@ -36,14 +32,14 @@ public class EventBlocker extends JavaPlugin implements Listener
 
 		Bukkit.getPluginManager().registerEvents(this, this);
 		
-		info("v" + pdfFile.getVersion() + " enabled!");
+		log.info("v" + pdfFile.getVersion() + " enabled!");
 	}
 	
 	public void onDisable()
 	{
-		info("v" + pdfFile.getVersion() + " disabled.");
+		log.info("v" + pdfFile.getVersion() + " disabled.");
 	}
-
+	
 	// block villager trading
 	@EventHandler(ignoreCancelled=true)
 	public void onEntityInteract(PlayerInteractEntityEvent e)
@@ -84,26 +80,37 @@ public class EventBlocker extends JavaPlugin implements Listener
 	{
 		e.setCancelled(true);
 	}
-
-	// temporary spawner switcher
+	
+	// disable ender dragon
 	@EventHandler(ignoreCancelled=true)
-	public void onChunkPopulate(ChunkPopulateEvent e)
+	public void onCreatureSpawn(CreatureSpawnEvent e)
 	{
-		for (BlockState state: e.getChunk().getTileEntities())
+		if(e.getEntityType() == EntityType.ENDER_DRAGON)
 		{
-			if(state instanceof CreatureSpawner)
-			{
-				if(state.getBlock().getBiome() == Biome.HELL)
-				{
-					EntityType et = ((CreatureSpawner) state).getSpawnedType();
-					if(et == EntityType.ZOMBIE || et == EntityType.SKELETON)
-					{
-						((CreatureSpawner) state).setSpawnedType(EntityType.BLAZE);
-						info("Changed spawner to blaze");
-					}
-				}
-			}
+			e.setCancelled(true);
 		}
+	}
+
+	// disable death message
+	@EventHandler(priority=EventPriority.MONITOR)
+	public void onDeath(PlayerDeathEvent e)
+	{
+		log.info(e.getDeathMessage());
+		e.setDeathMessage(null);
+	}
+
+	// disable join message
+	@EventHandler(priority=EventPriority.MONITOR)
+	public void onJoin(PlayerJoinEvent e)
+	{
+		e.setJoinMessage(null);
+	}
+
+	// disable quit message
+	@EventHandler(priority=EventPriority.MONITOR)
+	public void onQuit(PlayerQuitEvent e)
+	{
+		e.setQuitMessage(null);
 	}
 }
 
