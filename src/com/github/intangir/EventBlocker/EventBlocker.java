@@ -3,6 +3,8 @@ package com.github.intangir.EventBlocker;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -15,6 +17,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -95,7 +98,10 @@ public class EventBlocker extends JavaPlugin implements Listener
 	@EventHandler(priority=EventPriority.MONITOR)
 	public void onDeath(PlayerDeathEvent e)
 	{
-		log.info(e.getDeathMessage());
+		Location location = e.getEntity().getLocation();
+		String msg = e.getDeathMessage() + " ([" + location.getWorld().getName() + "] " + (int)location.getX() + ", " + (int)location.getY() + ", " + (int)location.getZ() + ")";
+		log.info(msg);
+		e.getEntity().sendMessage(ChatColor.RED + msg);
 		e.setDeathMessage(null);
 	}
 
@@ -112,5 +118,13 @@ public class EventBlocker extends JavaPlugin implements Listener
 	{
 		e.setQuitMessage(null);
 	}
+
+	// disable kick message
+	@EventHandler(priority=EventPriority.MONITOR)
+	public void onKick(PlayerKickEvent e)
+	{
+		e.setLeaveMessage(null);
+	}
+
 }
 
