@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,7 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -43,22 +41,6 @@ public class EventBlocker extends JavaPlugin implements Listener
 		log.info("v" + pdfFile.getVersion() + " disabled.");
 	}
 	
-	// block villager trading
-	@EventHandler(ignoreCancelled=true)
-	public void onEntityInteract(PlayerInteractEntityEvent e)
-	{
-	    Entity npc = e.getRightClicked();
-	    if (npc == null)
-	    {
-	        return;
-	    }
-	    
-	    if (npc.getType() == EntityType.VILLAGER)
-	    {
-	      e.setCancelled(true);
-	    }
-    }
-
 	// block enderchests 
 	@EventHandler(ignoreCancelled=true)
 	public void onPlayerInteract(PlayerInteractEvent e)
