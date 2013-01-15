@@ -6,10 +6,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -48,6 +50,16 @@ public class EventBlocker extends JavaPlugin implements Listener
 		if(e.getClickedBlock().getType() == Material.ENDER_CHEST)
 		{
 			e.setCancelled(true);
+		}
+		
+		// block water going down on cauldrons
+		if(e.getClickedBlock().getType() == Material.CAULDRON && e.getMaterial() == Material.GLASS_BOTTLE && e.getAction() == Action.RIGHT_CLICK_BLOCK)
+		{
+			Block block = e.getClickedBlock();
+			if(block.getData() > 0)
+			{
+				block.setData((byte)(block.getData()+1));
+			}
 		}
 	}
 	@EventHandler(ignoreCancelled=true)
