@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityCreatePortalEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -74,6 +75,11 @@ public class EventBlocker extends JavaPlugin implements Listener
 	// block portals
 	@EventHandler(ignoreCancelled=true)
 	public void onPortalCreate(PortalCreateEvent e)
+	{
+		e.setCancelled(true);
+	}
+	@EventHandler(ignoreCancelled=true)
+	public void onEntityPortalCreate(EntityCreatePortalEvent e)
 	{
 		e.setCancelled(true);
 	}
