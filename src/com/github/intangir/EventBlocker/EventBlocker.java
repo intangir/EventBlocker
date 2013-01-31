@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityCreatePortalEvent;
@@ -145,6 +146,21 @@ public class EventBlocker extends JavaPlugin implements Listener
 					e.setCancelled(true);
 					return;
 				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void onPistonPushRail(BlockPistonExtendEvent e)
+	{
+		for(Block b : e.getBlocks())
+		{
+			Material t = b.getType();
+			
+			if(t == Material.RAILS || t == Material.POWERED_RAIL || t == Material.DETECTOR_RAIL)
+			{
+				e.setCancelled(true);
+				return;
 			}
 		}
 	}
