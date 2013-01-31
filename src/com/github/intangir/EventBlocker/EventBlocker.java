@@ -128,7 +128,7 @@ public class EventBlocker extends JavaPlugin implements Listener
 		e.setLeaveMessage(null);
 	}
 	
-	// disable rail placement near piston
+	// disable rail placement near piston (avoid dupe bug)
 	@EventHandler
 	public void onRailPlace(BlockPlaceEvent e)
 	{
@@ -150,6 +150,7 @@ public class EventBlocker extends JavaPlugin implements Listener
 		}
 	}
 
+	// disable pushing rails  (avoid dupe bug)
 	@EventHandler
 	public void onPistonPushRail(BlockPistonExtendEvent e)
 	{
