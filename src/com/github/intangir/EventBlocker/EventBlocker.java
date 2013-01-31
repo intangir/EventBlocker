@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -125,6 +126,27 @@ public class EventBlocker extends JavaPlugin implements Listener
 	{
 		e.setLeaveMessage(null);
 	}
-
+	
+	// disable rail placement near piston
+	@EventHandler
+	public void onRailPlace(BlockPlaceEvent e)
+	{
+		Block b = e.getBlock();
+		Material t = b.getType();
+		
+		if(t == Material.RAILS || t == Material.POWERED_RAIL || t == Material.DETECTOR_RAIL)
+		{
+			BlockFace[] faces = {BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN};
+			for (BlockFace face : faces)
+			{
+				t = b.getRelative(face).getType();
+				if(t == Material.PISTON_STICKY_BASE || t == Material.PISTON_EXTENSION || t == Material.PISTON_MOVING_PIECE || t == Material.PISTON_BASE)
+				{
+					e.setCancelled(true);
+					return;
+				}
+			}
+		}
+	}
 }
 
