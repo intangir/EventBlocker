@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Enderman;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,6 +17,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityCreatePortalEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -104,11 +106,11 @@ public class EventBlocker extends JavaPlugin implements Listener
 		String msg = e.getDeathMessage() + " ([" + location.getWorld().getName() + "] " + (int)location.getX() + ", " + (int)location.getY() + ", " + (int)location.getZ() + ")";
 		log.info(msg);
 		e.getEntity().sendMessage(ChatColor.RED + msg);
-		e.setDeathMessage(null);
+		e.setDeathMessage(ChatColor.RED + e.getDeathMessage());
 	}
 
 	// disable join message
-	@EventHandler(priority=EventPriority.MONITOR)
+	/*@EventHandler(priority=EventPriority.MONITOR)
 	public void onJoin(PlayerJoinEvent e)
 	{
 		e.setJoinMessage(null);
@@ -126,7 +128,7 @@ public class EventBlocker extends JavaPlugin implements Listener
 	public void onKick(PlayerKickEvent e)
 	{
 		e.setLeaveMessage(null);
-	}
+	}*/
 	
 	// disable rail placement near piston (avoid dupe bug)
 	@EventHandler
@@ -165,5 +167,16 @@ public class EventBlocker extends JavaPlugin implements Listener
 			}
 		}
 	}
+	
+	// disable endermen griefing
+	@EventHandler(ignoreCancelled=true)
+	public void onEntityChangeBlock(EntityChangeBlockEvent e)
+	{
+		if(e.getEntity() instanceof Enderman)
+		{
+			e.setCancelled(true);
+		}
+	}
+	
 }
 
